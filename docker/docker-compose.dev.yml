@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: karaoke-mongo-dev
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data_dev:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: karaoke
+
+  backend-dev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    container_name: karaoke-backend-dev
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      MONGO_URI: mongodb://mongodb:27017
+      DATABASE_NAME: karaoke
+    depends_on:
+      - mongodb
+    volumes:
+      - ../backend:/app
+    # For development, we can override the command to enable hot reload
+    # command: ["go", "run", "cmd/main.go"]
+
+  frontend-dev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.frontend
+    container_name: karaoke-frontend-dev
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend-dev
+
+volumes:
+  mongodb_data_dev:
