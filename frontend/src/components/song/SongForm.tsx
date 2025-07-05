@@ -69,7 +69,7 @@ export const SongForm = ({
   return (
     <Card className="max-w-2xl mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+        <h2 className="text-xl font-semibold text-white">
           {song ? 'Edit Song' : 'Add New Song'}
         </h2>
         <Button variant="ghost" size="sm" onClick={onCancel}>

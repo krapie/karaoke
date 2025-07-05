@@ -68,14 +68,8 @@ export const useSongs = (playlistId?: string) => {
     }
   };
 
-  const reorderSongs = (dragIndex: number, hoverIndex: number) => {
-    setSongs(prev => {
-      const draggedSong = prev[dragIndex];
-      const newSongs = [...prev];
-      newSongs.splice(dragIndex, 1);
-      newSongs.splice(hoverIndex, 0, draggedSong);
-      return newSongs;
-    });
+  const reorderSongs = (newOrder: Song[]) => {
+    setSongs(newOrder);
   };
 
   useEffect(() => {

@@ -42,12 +42,10 @@ function App() {
     }
   }, [playlists, activePlaylist]);
 
-  // Initialize theme
+  // Initialize dark theme
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    }
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
   }, []);
 
   const handleCreatePlaylist = async () => {
@@ -62,11 +60,10 @@ function App() {
     }
   };
 
-  const handleEditPlaylist = async (playlist: Playlist) => {
-    const name = prompt('Enter new playlist name:', playlist.name);
-    if (name?.trim() && name !== playlist.name) {
+  const handleEditPlaylist = async (playlist: Playlist, newName: string) => {
+    if (newName !== playlist.name) {
       try {
-        await updatePlaylist(playlist.id, { name: name.trim() });
+        await updatePlaylist(playlist.id, { name: newName });
       } catch (error) {
         alert('Failed to update playlist');
       }
@@ -100,23 +97,14 @@ function App() {
     }
   };
 
-  const handleEditSong = (song: Song) => {
-    setEditingSong(song);
-    setShowSongForm(true);
-  };
-
-  const handleDeleteSong = async (song: Song) => {
-    if (confirm(`Are you sure you want to delete "${song.title}"?`)) {
-      try {
-        await deleteSong(song.id);
-      } catch (error) {
-        alert('Failed to delete song');
-      }
-    }
-  };
-
   const handleSongSelect = (song: Song) => {
     setSelectedSong(song);
+  };
+
+  const handleBackToPlaylist = () => {
+    setSelectedSong(null);
+    setShowSongForm(false);
+    setEditingSong(null);
   };    if (playlistsLoading) {
       return (
         <Layout>
@@ -143,7 +131,7 @@ function App() {
   }
 
   return (
-    <Layout>
+    <Layout onLogoClick={handleBackToPlaylist}>
       {selectedSong ? (
         <SongDetails
           song={selectedSong}
@@ -156,7 +144,27 @@ function App() {
               setSelectedSong(updatedSong);
             }
           }}
+          onDelete={async (songId) => {
+            await deleteSong(songId);
+          }}
+          onEdit={(song) => {
+            setEditingSong(song);
+            setShowSongForm(true);
+            setSelectedSong(null);
+          }}
         />
+      ) : showSongForm && activePlaylist ? (
+        <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto mx-auto">
+          <SongForm
+            song={editingSong || undefined}
+            playlistId={activePlaylist.id}
+            onSubmit={handleSongFormSubmit}
+            onCancel={() => {
+              setShowSongForm(false);
+              setEditingSong(null);
+            }}
+          />
+        </div>
       ) : (
         <div className="space-y-6">
           <PlaylistTabs
@@ -192,8 +200,6 @@ function App() {
                 <SongList
                   songs={songs}
                   onSongSelect={handleSongSelect}
-                  onEditSong={handleEditSong}
-                  onDeleteSong={handleDeleteSong}
                   onReorderSongs={reorderSongs}
                 />
               )}
@@ -214,22 +220,6 @@ function App() {
               </Button>
             </div>
           )}
-        </div>
-      )}
-
-      {showSongForm && activePlaylist && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <SongForm
-              song={editingSong || undefined}
-              playlistId={activePlaylist.id}
-              onSubmit={handleSongFormSubmit}
-              onCancel={() => {
-                setShowSongForm(false);
-                setEditingSong(null);
-              }}
-            />
-          </div>
         </div>
       )}
     </Layout>

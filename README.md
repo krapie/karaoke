@@ -8,8 +8,9 @@ A mobile-optimized web service for managing karaoke playlists with lyrics displa
 - ✅ **Song Management**: Add, edit, delete, and reorder songs within playlists
 - ✅ **Lyrics Display & Editing**: View and edit song lyrics with proper Japanese text support
 - ✅ **Mobile-First Design**: Optimized for touch devices with YouTube Music-inspired UI
-- ✅ **Dark/Light Theme**: Toggle between dark and light modes
-- ✅ **Drag & Drop**: Reorder songs within playlists (desktop)
+- ✅ **Dark Theme**: Sleek dark theme optimized for comfortable viewing
+- ✅ **Drag & Drop**: Reorder songs within playlists (desktop and mobile)
+- ✅ **Search Functionality**: Quick search through songs by title or artist
 - ✅ **Responsive Design**: Works seamlessly on mobile, tablet, and desktop
 
 ## 🛠 Tech Stack
@@ -82,7 +83,7 @@ cd frontend
 npm install
 npm run dev
 ```
-The frontend will start on `http://localhost:5173`
+The frontend will start on `http://localhost:`
 
 ### Using Docker Compose (Recommended)
 
@@ -121,8 +122,17 @@ docker-compose up --build
 ### Mobile Features
 - **Touch-friendly interface**: All buttons and interactions optimized for mobile
 - **Responsive design**: Works on phones, tablets, and desktops
+- **Touch drag & drop**: Long press and drag to reorder songs on mobile
+- **Haptic feedback**: Vibration feedback during drag operations (if supported)
 - **Gesture support**: Smooth scrolling and intuitive navigation
 - **Japanese text support**: Proper rendering of Japanese characters
+
+### Song Management
+- **Search**: Use the search bar to quickly find songs by title or artist
+- **Reordering**: 
+  - **Desktop**: Click and drag the grip icon (⋮⋮) to reorder songs
+  - **Mobile**: Long press and drag the grip icon to reorder songs
+- **Quick access**: Tap any song to view details, lyrics, and edit options
 
 ## 🎯 API Endpoints
 
@@ -146,7 +156,6 @@ docker-compose up --build
 ### Colors (YouTube Music Inspired)
 - **Primary**: Red-based palette for actions and highlights
 - **Dark Theme**: Deep blacks and grays for comfortable viewing
-- **Light Theme**: Clean whites and subtle grays
 
 ### Typography
 - **Primary Font**: Noto Sans JP (for Japanese text support)
