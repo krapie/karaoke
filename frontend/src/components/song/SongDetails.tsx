@@ -75,6 +75,11 @@ export const SongDetails = ({ song, onBack, onUpdate, onDelete, onEdit }: SongDe
             <p className="text-xl text-gray-400 mb-4">
               by {song.artist}
             </p>
+            {song.tjNumber && (
+              <p className="text-lg text-blue-400 mb-4">
+                TJ #{song.tjNumber}
+              </p>
+            )}
             <p className="text-sm text-gray-500 mb-6">
               Added {formatDate(song.createdAt)}
               {song.updatedAt !== song.createdAt && (

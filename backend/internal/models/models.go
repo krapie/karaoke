@@ -20,6 +20,7 @@ type Song struct {
 	Artist     string             `json:"artist" bson:"artist" validate:"required,min=1,max=100"`
 	PlaylistID primitive.ObjectID `json:"playlistId" bson:"playlistId" validate:"required"`
 	Order      int                `json:"order" bson:"order"`
+	TJNumber   *int               `json:"tjNumber,omitempty" bson:"tjNumber,omitempty"`
 	Lyrics     string             `json:"lyrics,omitempty" bson:"lyrics,omitempty"`
 	CreatedAt  time.Time          `json:"createdAt" bson:"createdAt"`
 	UpdatedAt  time.Time          `json:"updatedAt" bson:"updatedAt"`
@@ -38,14 +39,16 @@ type CreateSongRequest struct {
 	Title      string `json:"title" validate:"required,min=1,max=200"`
 	Artist     string `json:"artist" validate:"required,min=1,max=100"`
 	PlaylistID string `json:"playlistId" validate:"required"`
+	TJNumber   *int   `json:"tjNumber,omitempty"`
 	Lyrics     string `json:"lyrics,omitempty"`
 }
 
 type UpdateSongRequest struct {
-	Title  *string `json:"title,omitempty" validate:"omitempty,min=1,max=200"`
-	Artist *string `json:"artist,omitempty" validate:"omitempty,min=1,max=100"`
-	Lyrics *string `json:"lyrics,omitempty"`
-	Order  *int    `json:"order,omitempty"`
+	Title    *string `json:"title,omitempty" validate:"omitempty,min=1,max=200"`
+	Artist   *string `json:"artist,omitempty" validate:"omitempty,min=1,max=100"`
+	TJNumber *int    `json:"tjNumber,omitempty"`
+	Lyrics   *string `json:"lyrics,omitempty"`
+	Order    *int    `json:"order,omitempty"`
 }
 
 type UpdateSongOrderRequest struct {

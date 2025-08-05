@@ -136,6 +136,7 @@ func (h *SongHandler) Create(w http.ResponseWriter, r *http.Request) {
 		Artist:     req.Artist,
 		PlaylistID: playlistID,
 		Order:      lastSong.Order + 1,
+		TJNumber:   req.TJNumber,
 		Lyrics:     req.Lyrics,
 		CreatedAt:  now,
 		UpdatedAt:  now,
@@ -176,6 +177,9 @@ func (h *SongHandler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 	if req.Artist != nil {
 		update["artist"] = *req.Artist
+	}
+	if req.TJNumber != nil {
+		update["tjNumber"] = *req.TJNumber
 	}
 	if req.Lyrics != nil {
 		update["lyrics"] = *req.Lyrics

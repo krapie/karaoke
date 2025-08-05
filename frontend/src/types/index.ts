@@ -12,6 +12,7 @@ export interface Song {
   artist: string;
   playlistId: string;
   order: number;
+  tjNumber?: number;
   lyrics?: string;
   createdAt: string;
   updatedAt: string;
@@ -30,12 +31,14 @@ export interface CreateSongRequest {
   title: string;
   artist: string;
   playlistId: string;
+  tjNumber?: number;
   lyrics?: string;
 }
 
 export interface UpdateSongRequest {
   title?: string;
   artist?: string;
+  tjNumber?: number;
   lyrics?: string;
   order?: number;
 }

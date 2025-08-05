@@ -2,18 +2,20 @@
 
 A mobile-optimized web service for managing karaoke playlists with lyrics display functionality, particularly focusing on Japanese songs.
 
-## 🎵 Features
+## Features
 
-- ✅ **Playlist Management**: Create, edit, delete, and organize multiple playlists
-- ✅ **Song Management**: Add, edit, delete, and reorder songs within playlists
-- ✅ **Lyrics Display & Editing**: View and edit song lyrics with proper Japanese text support
-- ✅ **Mobile-First Design**: Optimized for touch devices with YouTube Music-inspired UI
-- ✅ **Dark Theme**: Sleek dark theme optimized for comfortable viewing
-- ✅ **Drag & Drop**: Reorder songs within playlists (desktop and mobile)
-- ✅ **Search Functionality**: Quick search through songs by title or artist
-- ✅ **Responsive Design**: Works seamlessly on mobile, tablet, and desktop
+- **Playlist Management**: Create, edit, delete, and organize multipl- Set up SSL certificates for HTTPS
 
-## 🛠 Tech Stack
+## Testinglaylists
+- **Song Management**: Add, edit, delete, and reorder songs within playlists
+- **Lyrics Display & Editing**: View and edit song lyrics with proper Japanese text support
+- **Mobile-First Design**: Optimized for touch devices with YouTube Music-inspired UI
+- **Dark Theme**: Sleek dark theme optimized for comfortable viewing
+- **Drag & Drop**: Reorder songs within playlists (desktop and mobile)
+- **Search Functionality**: Quick search through songs by title or artist
+- **Responsive Design**: Works seamlessly on mobile, tablet, and desktop
+
+## Tech Stack
 
 ### Frontend
 - **Vite** - Build tool and development server
@@ -43,12 +45,13 @@ Collections:
     ├── artist (string)
     ├── playlistId (ObjectID)
     ├── order (int)
+    ├── tjNumber (int, optional)
     ├── lyrics (string, optional)
     ├── createdAt (timestamp)
     └── updatedAt (timestamp)
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js (v18+)
@@ -99,7 +102,7 @@ docker-compose -f docker-compose.dev.yml up -d
 docker-compose up --build
 ```
 
-## 📱 Usage
+## Usage
 
 ### Creating Your First Playlist
 1. Open the application in your browser
@@ -134,7 +137,7 @@ docker-compose up --build
   - **Mobile**: Long press and drag the grip icon to reorder songs
 - **Quick access**: Tap any song to view details, lyrics, and edit options
 
-## 🎯 API Endpoints
+## API Endpoints
 
 ### Playlists
 - `GET /api/playlists` - List all playlists
@@ -151,7 +154,7 @@ docker-compose up --build
 - `PUT /api/songs/:id/order` - Update song order
 - `DELETE /api/songs/:id` - Delete song
 
-## 🎨 Design System
+## Design System
 
 ### Colors (YouTube Music Inspired)
 - **Primary**: Red-based palette for actions and highlights
@@ -167,7 +170,7 @@ docker-compose up --build
 - **Forms**: Clean inputs with proper validation
 - **Navigation**: Tab-based playlist switching
 
-## 🔧 Development
+## Development
 
 ### Project Structure
 ```
@@ -210,7 +213,7 @@ karaoke/
 - Error handling with rollback
 - Loading states for better UX
 
-## 🚢 Deployment
+## Deployment
 
 ### Environment Variables
 
@@ -256,13 +259,13 @@ curl -X POST http://localhost:8080/api/playlists \
   -H "Content-Type: application/json" \
   -d '{"name": "My Playlist"}'
 
-# Test song creation with Japanese text
+# Test song creation with Japanese text and TJ number
 curl -X POST http://localhost:8080/api/songs \
   -H "Content-Type: application/json" \
-  -d '{"title": "夜に駆ける", "artist": "YOASOBI", "playlistId": "..."}'
+  -d '{"title": "夜に駆ける", "artist": "YOASOBI", "tjNumber": 292718, "playlistId": "..."}'
 ```
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
@@ -270,13 +273,13 @@ curl -X POST http://localhost:8080/api/songs \
 4. Push to the branch: `git push origin feature/amazing-feature`
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🎵 Acknowledgments
+## Acknowledgments
 
 - Inspired by YouTube Music's clean and intuitive interface
 - Japanese font support by Google Fonts (Noto Sans JP)
 - Icons provided by Lucide React
-- Built with love for karaoke enthusiasts 🎤
+- Built with love for karaoke enthusiasts

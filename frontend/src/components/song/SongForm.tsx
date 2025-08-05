@@ -21,6 +21,7 @@ export const SongForm = ({
   const [formData, setFormData] = useState({
     title: song?.title || '',
     artist: song?.artist || '',
+    tjNumber: song?.tjNumber?.toString() || '',
     lyrics: song?.lyrics || '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -48,11 +49,18 @@ export const SongForm = ({
     }
 
     try {
-      const songData = song
-        ? formData // For updates, just send the changed fields
-        : { ...formData, playlistId }; // For creates, include playlistId
+      const songData = {
+        title: formData.title,
+        artist: formData.artist,
+        tjNumber: formData.tjNumber ? parseInt(formData.tjNumber, 10) : undefined,
+        lyrics: formData.lyrics,
+      };
 
-      await onSubmit(songData);
+      const submitData = song
+        ? songData // For updates, just send the changed fields
+        : { ...songData, playlistId }; // For creates, include playlistId
+
+      await onSubmit(submitData);
     } catch (error) {
       console.error('Failed to save song:', error);
     }
@@ -94,6 +102,15 @@ export const SongForm = ({
           error={errors.artist}
           placeholder="Enter artist name"
           required
+        />
+
+        <Input
+          label="TJ Number (Optional)"
+          type="number"
+          value={formData.tjNumber}
+          onChange={(e) => handleChange('tjNumber', e.target.value)}
+          error={errors.tjNumber}
+          placeholder="e.g., 292718"
         />
 
         <Textarea

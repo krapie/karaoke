@@ -42,7 +42,8 @@ export const SongList = ({
   // Filter songs based on search query
   const filteredSongs = songs.filter(song => 
     song.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    song.artist.toLowerCase().includes(searchQuery.toLowerCase())
+    song.artist.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (song.tjNumber && song.tjNumber.toString().includes(searchQuery))
   );
 
   const clearSearch = () => setSearchQuery('');
@@ -116,7 +117,7 @@ export const SongList = ({
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
           <input
             type="text"
-            placeholder="Search songs..."
+            placeholder="Search by title, artist, or TJ number..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-10 py-2 border border-gray-600 rounded-lg bg-gray-800 text-gray-100 placeholder:text-gray-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors duration-200"
@@ -178,6 +179,9 @@ export const SongList = ({
                   </h3>
                   <p className="text-sm text-gray-400 truncate">
                     {activeSong.artist}
+                    {activeSong.tjNumber && (
+                      <span className="text-blue-400 ml-2">• TJ #{activeSong.tjNumber}</span>
+                    )}
                   </p>
                 </div>
               </div>
@@ -247,6 +251,9 @@ const SortableItem = ({ song, onSelect, canDrag }: SortableItemProps) => {
             </h3>
             <p className="text-sm text-gray-400 truncate">
               {song.artist}
+              {song.tjNumber && (
+                <span className="text-blue-400 ml-2">• TJ #{song.tjNumber}</span>
+              )}
             </p>
             {song.lyrics && (
               <p className="text-xs text-gray-500 mt-1">
