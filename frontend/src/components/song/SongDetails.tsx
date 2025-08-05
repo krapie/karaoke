@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Edit3, Save, X, Trash2 } from 'lucide-react';
 import type { Song, UpdateSongRequest } from '../../types';
-import { Button, Card, Textarea } from '../ui';
+import { Button, Card, Textarea, ConfirmationModal } from '../ui';
 import { formatDate } from '../../utils';
 
 interface SongDetailsProps {
@@ -16,6 +16,8 @@ export const SongDetails = ({ song, onBack, onUpdate, onDelete, onEdit }: SongDe
   const [isEditingLyrics, setIsEditingLyrics] = useState(false);
   const [lyrics, setLyrics] = useState(song.lyrics || '');
   const [saving, setSaving] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     setLyrics(song.lyrics || '');
@@ -46,14 +48,20 @@ export const SongDetails = ({ song, onBack, onUpdate, onDelete, onEdit }: SongDe
   };
 
   const handleDelete = async () => {
-    if (window.confirm(`Are you sure you want to delete "${song.title}"?`)) {
-      try {
-        await onDelete(song.id);
-        onBack(); // Navigate back after deletion
-      } catch (error) {
-        console.error('Failed to delete song:', error);
-        alert('Failed to delete song');
-      }
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      setDeleting(true);
+      await onDelete(song.id);
+      onBack(); // Navigate back after deletion
+    } catch (error) {
+      console.error('Failed to delete song:', error);
+      alert('Failed to delete song');
+    } finally {
+      setDeleting(false);
+      setShowDeleteConfirm(false);
     }
   };
 
@@ -179,6 +187,19 @@ export const SongDetails = ({ song, onBack, onUpdate, onDelete, onEdit }: SongDe
           </div>
         )}
       </Card>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Delete Song"
+        message={`Are you sure you want to delete "${song.title}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        loading={deleting}
+      />
     </div>
   );
 };

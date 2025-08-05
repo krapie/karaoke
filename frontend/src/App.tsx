@@ -6,7 +6,7 @@ import { PlaylistTabs, CreatePlaylistModal } from './components/playlist';
 import { SongList } from './components/song/SongList';
 import { SongForm } from './components/song/SongForm';
 import { SongDetails } from './components/song/SongDetails';
-import { Button } from './components/ui';
+import { Button, ConfirmationModal } from './components/ui';
 import { useYorkiePlaylists } from './hooks/useYorkiePlaylists';
 import { useYorkieSongs } from './hooks/useYorkieSongs';
 import type { Playlist, Song, CreateSongRequest, UpdateSongRequest } from './types';
@@ -37,6 +37,9 @@ function PlaylistView() {
   const sessionPath = useSessionPath();
   const { activePlaylist, setActivePlaylist, playlists } = usePlaylistContext();
   const [showCreatePlaylistModal, setShowCreatePlaylistModal] = useState(false);
+  const [showDeletePlaylistConfirm, setShowDeletePlaylistConfirm] = useState(false);
+  const [playlistToDelete, setPlaylistToDelete] = useState<Playlist | null>(null);
+  const [deletingPlaylist, setDeletingPlaylist] = useState(false);
 
   const {
     loading: playlistsLoading,
@@ -85,15 +88,25 @@ function PlaylistView() {
   };
 
   const handleDeletePlaylist = async (playlist: Playlist) => {
-    if (confirm(`Are you sure you want to delete "${playlist.name}"?`)) {
-      try {
-        await deletePlaylist(playlist.id);
-        if (activePlaylist?.id === playlist.id) {
-          setActivePlaylist(playlists.find(p => p.id !== playlist.id) || null);
-        }
-      } catch (error) {
-        alert('Failed to delete playlist');
+    setPlaylistToDelete(playlist);
+    setShowDeletePlaylistConfirm(true);
+  };
+
+  const confirmDeletePlaylist = async () => {
+    if (!playlistToDelete) return;
+    
+    try {
+      setDeletingPlaylist(true);
+      await deletePlaylist(playlistToDelete.id);
+      if (activePlaylist?.id === playlistToDelete.id) {
+        setActivePlaylist(playlists.find(p => p.id !== playlistToDelete.id) || null);
       }
+    } catch (error) {
+      alert('Failed to delete playlist');
+    } finally {
+      setDeletingPlaylist(false);
+      setShowDeletePlaylistConfirm(false);
+      setPlaylistToDelete(null);
     }
   };
 
@@ -190,6 +203,22 @@ function PlaylistView() {
         isOpen={showCreatePlaylistModal}
         onClose={() => setShowCreatePlaylistModal(false)}
         onSubmit={handleCreatePlaylistSubmit}
+      />
+
+      {/* Delete Playlist Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeletePlaylistConfirm}
+        onClose={() => {
+          setShowDeletePlaylistConfirm(false);
+          setPlaylistToDelete(null);
+        }}
+        onConfirm={confirmDeletePlaylist}
+        title="Delete Playlist"
+        message={playlistToDelete ? `Are you sure you want to delete "${playlistToDelete.name}"? This will also delete all songs in this playlist. This action cannot be undone.` : ''}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        loading={deletingPlaylist}
       />
     </>
   );
