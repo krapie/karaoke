@@ -58,3 +58,22 @@ export interface PaginatedResponse<T> {
     totalPages: number;
   };
 }
+
+// Yorkie Document Root Structure
+export interface KaraokeDocument {
+  playlists: { [key: string]: Playlist };
+  songs: { [key: string]: Song };
+  playlistOrder: string[];
+  songOrder: { [playlistId: string]: string[] };
+}
+
+// Presence data for real-time collaboration
+export interface UserPresence {
+  clientID: string;
+  name?: string;
+  color?: string;
+  cursor?: {
+    playlistId?: string;
+    songId?: string;
+  };
+}
