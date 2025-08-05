@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react';
 import { Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { Layout } from './components/layout';
@@ -11,6 +11,21 @@ import { useYorkiePlaylists } from './hooks/useYorkiePlaylists';
 import { useYorkieSongs } from './hooks/useYorkieSongs';
 import type { Playlist, Song, CreateSongRequest, UpdateSongRequest } from './types';
 
+// Playlist Context for sharing active playlist across components
+interface PlaylistContextType {
+  activePlaylist: Playlist | null;
+  setActivePlaylist: (playlist: Playlist | null) => void;
+  playlists: Playlist[];
+}
+
+const PlaylistContext = createContext<PlaylistContextType>({
+  activePlaylist: null,
+  setActivePlaylist: () => {},
+  playlists: [],
+});
+
+const usePlaylistContext = () => useContext(PlaylistContext);
+
 // Helper function to get the current session path
 const useSessionPath = () => {
   const { sessionId } = useParams<{ sessionId?: string }>();
@@ -20,11 +35,10 @@ const useSessionPath = () => {
 function PlaylistView() {
   const navigate = useNavigate();
   const sessionPath = useSessionPath();
-  const [activePlaylist, setActivePlaylist] = useState<Playlist | null>(null);
+  const { activePlaylist, setActivePlaylist, playlists } = usePlaylistContext();
   const [showCreatePlaylistModal, setShowCreatePlaylistModal] = useState(false);
 
   const {
-    playlists,
     loading: playlistsLoading,
     error: playlistsError,
     createPlaylist,
@@ -39,12 +53,12 @@ function PlaylistView() {
     reorderSongs,
   } = useYorkieSongs(activePlaylist?.id);
 
-  // Set first playlist as active when playlists load
+  // Set first playlist as active when playlists load and no playlist is selected
   useEffect(() => {
     if (playlists.length > 0 && !activePlaylist) {
       setActivePlaylist(playlists[0]);
     }
-  }, [playlists, activePlaylist]);
+  }, [playlists, activePlaylist, setActivePlaylist]);
 
   const handleCreatePlaylist = async () => {
     setShowCreatePlaylistModal(true);
@@ -185,17 +199,9 @@ function SongDetailsView() {
   const { songId } = useParams<{ songId: string }>();
   const navigate = useNavigate();
   const sessionPath = useSessionPath();
-  const [activePlaylist, setActivePlaylist] = useState<Playlist | null>(null);
+  const { activePlaylist } = usePlaylistContext();
 
-  const { playlists } = useYorkiePlaylists();
   const { songs, updateSong, deleteSong } = useYorkieSongs(activePlaylist?.id);
-
-  // Set first playlist as active when playlists load
-  useEffect(() => {
-    if (playlists.length > 0 && !activePlaylist) {
-      setActivePlaylist(playlists[0]);
-    }
-  }, [playlists, activePlaylist]);
 
   const song = songs.find(s => s.id === songId);
 
@@ -242,17 +248,9 @@ function SongFormView() {
   const { songId } = useParams<{ songId?: string }>();
   const navigate = useNavigate();
   const sessionPath = useSessionPath();
-  const [activePlaylist, setActivePlaylist] = useState<Playlist | null>(null);
+  const { activePlaylist } = usePlaylistContext();
 
-  const { playlists } = useYorkiePlaylists();
   const { songs, createSong, updateSong } = useYorkieSongs(activePlaylist?.id);
-
-  // Set first playlist as active when playlists load
-  useEffect(() => {
-    if (playlists.length > 0 && !activePlaylist) {
-      setActivePlaylist(playlists[0]);
-    }
-  }, [playlists, activePlaylist]);
 
   const editingSong = songId ? songs.find(s => s.id === songId) : null;
 
@@ -296,6 +294,23 @@ function SongFormView() {
   );
 }
 
+function PlaylistProvider({ children }: { children: React.ReactNode }) {
+  const [activePlaylist, setActivePlaylist] = useState<Playlist | null>(null);
+  const { playlists } = useYorkiePlaylists();
+
+  const contextValue = {
+    activePlaylist,
+    setActivePlaylist,
+    playlists,
+  };
+
+  return (
+    <PlaylistContext.Provider value={contextValue}>
+      {children}
+    </PlaylistContext.Provider>
+  );
+}
+
 function App() {
   // Initialize dark theme
   useEffect(() => {
@@ -305,21 +320,23 @@ function App() {
 
   return (
     <Layout>
-      <Routes>
-        {/* Default session route */}
-        <Route path="/" element={<PlaylistView />} />
-        
-        {/* Session-specific routes */}
-        <Route path="/:sessionId" element={<PlaylistView />} />
-        <Route path="/:sessionId/song/:songId" element={<SongDetailsView />} />
-        <Route path="/:sessionId/add-song" element={<SongFormView />} />
-        <Route path="/:sessionId/edit-song/:songId" element={<SongFormView />} />
-        
-        {/* Default session specific routes (for root path) */}
-        <Route path="/song/:songId" element={<SongDetailsView />} />
-        <Route path="/add-song" element={<SongFormView />} />
-        <Route path="/edit-song/:songId" element={<SongFormView />} />
-      </Routes>
+      <PlaylistProvider>
+        <Routes>
+          {/* Default session route */}
+          <Route path="/" element={<PlaylistView />} />
+          
+          {/* Session-specific routes */}
+          <Route path="/:sessionId" element={<PlaylistView />} />
+          <Route path="/:sessionId/song/:songId" element={<SongDetailsView />} />
+          <Route path="/:sessionId/add-song" element={<SongFormView />} />
+          <Route path="/:sessionId/edit-song/:songId" element={<SongFormView />} />
+          
+          {/* Default session specific routes (for root path) */}
+          <Route path="/song/:songId" element={<SongDetailsView />} />
+          <Route path="/add-song" element={<SongFormView />} />
+          <Route path="/edit-song/:songId" element={<SongFormView />} />
+        </Routes>
+      </PlaylistProvider>
     </Layout>
   );
 }
