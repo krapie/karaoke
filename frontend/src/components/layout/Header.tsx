@@ -1,14 +1,21 @@
 import { Menu, Music } from 'lucide-react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '../ui';
 import { PresenceIndicator } from '../realtime/PresenceIndicator';
 
 interface HeaderProps {
   onMenuToggle?: () => void;
   title?: string;
-  onLogoClick?: () => void;
 }
 
-export const Header = ({ onMenuToggle, title = 'Karaoke', onLogoClick }: HeaderProps) => {
+export const Header = ({ onMenuToggle, title = 'Karaoke' }: HeaderProps) => {
+  const navigate = useNavigate();
+  const { sessionId } = useParams<{ sessionId?: string }>();
+
+  const handleLogoClick = () => {
+    navigate(sessionId ? `/${sessionId}` : '/');
+  };
+
   return (
     <header className="bg-gray-900 border-b border-gray-700 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
@@ -24,7 +31,7 @@ export const Header = ({ onMenuToggle, title = 'Karaoke', onLogoClick }: HeaderP
             </Button>
             <div className="flex items-center min-w-0">
               <button
-                onClick={onLogoClick}
+                onClick={handleLogoClick}
                 className="flex items-center hover:opacity-80 transition-opacity min-w-0"
               >
                 <Music className="h-6 w-6 sm:h-8 sm:w-8 text-red-600 mr-2 flex-shrink-0" />

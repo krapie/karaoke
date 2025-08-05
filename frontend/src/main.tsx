@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.tsx'
 import { KaraokeProvider } from './providers/KaraokeProvider.tsx'
@@ -7,10 +8,12 @@ import { YorkieErrorBoundary } from './components/realtime/YorkieErrorBoundary.t
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <YorkieErrorBoundary>
-      <KaraokeProvider>
-        <App />
-      </KaraokeProvider>
-    </YorkieErrorBoundary>
+    <BrowserRouter>
+      <YorkieErrorBoundary>
+        <KaraokeProvider>
+          <App />
+        </KaraokeProvider>
+      </YorkieErrorBoundary>
+    </BrowserRouter>
   </StrictMode>,
 )
