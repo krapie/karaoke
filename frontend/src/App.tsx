@@ -230,7 +230,7 @@ function SongDetailsView() {
   const sessionPath = useSessionPath();
   const { activePlaylist } = usePlaylistContext();
 
-  const { songs, updateSong, deleteSong } = useYorkieSongs(activePlaylist?.id);
+  const { songs, loading: songsLoading, updateSong, deleteSong } = useYorkieSongs(activePlaylist?.id);
 
   const song = songs.find(s => s.id === songId);
 
@@ -251,6 +251,16 @@ function SongDetailsView() {
     navigate(sessionPath || '/');
   };
 
+  // Show loading state while playlist or songs are loading
+  if (!activePlaylist || songsLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+      </div>
+    );
+  }
+
+  // Only show "not found" after loading is complete
   if (!song) {
     return (
       <div className="text-center py-12">
@@ -279,7 +289,7 @@ function SongFormView() {
   const sessionPath = useSessionPath();
   const { activePlaylist } = usePlaylistContext();
 
-  const { songs, createSong, updateSong } = useYorkieSongs(activePlaylist?.id);
+  const { songs, loading: songsLoading, createSong, updateSong } = useYorkieSongs(activePlaylist?.id);
 
   const editingSong = songId ? songs.find(s => s.id === songId) : null;
 
@@ -300,10 +310,29 @@ function SongFormView() {
     navigate(-1); // Go back to previous page
   };
 
+  // Show loading state while playlist is not available
   if (!activePlaylist) {
     return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+      </div>
+    );
+  }
+
+  // If editing a song, wait for songs to load
+  if (songId && songsLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+      </div>
+    );
+  }
+
+  // If editing a song that doesn't exist after loading
+  if (songId && !songsLoading && !editingSong) {
+    return (
       <div className="text-center py-12">
-        <p className="text-gray-500 dark:text-gray-400">No playlist available</p>
+        <p className="text-gray-500 dark:text-gray-400">Song not found</p>
         <Button onClick={() => navigate(sessionPath || '/')} className="mt-4">
           Back to Playlist
         </Button>
@@ -326,6 +355,13 @@ function SongFormView() {
 function PlaylistProvider({ children }: { children: React.ReactNode }) {
   const [activePlaylist, setActivePlaylist] = useState<Playlist | null>(null);
   const { playlists } = useYorkiePlaylists();
+
+  // Auto-select first playlist when playlists load and no playlist is selected
+  useEffect(() => {
+    if (playlists.length > 0 && !activePlaylist) {
+      setActivePlaylist(playlists[0]);
+    }
+  }, [playlists, activePlaylist]);
 
   const contextValue = {
     activePlaylist,

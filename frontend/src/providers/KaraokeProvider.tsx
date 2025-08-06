@@ -9,13 +9,16 @@ const YORKIE_API_KEY = import.meta.env.VITE_YORKIE_API_KEY || 'YOUR_YORKIE_API_K
 const getDocumentKey = (): string => {
   const path = window.location.pathname;
   
-  // Remove leading slash and use path as document key
+  // Extract session ID from path (first segment after /)
+  const pathSegments = path.split('/').filter(Boolean);
+  
   // If no path or just "/", use default
-  const pathKey = path.slice(1) || 'default';
+  // If path has segments, use only the first one (session ID)
+  const sessionId = pathSegments.length > 0 ? pathSegments[0] : 'default';
   
   // Sanitize the key to ensure it's valid for Yorkie
   // Allow only alphanumeric characters, hyphens, and underscores
-  const sanitizedKey = pathKey.replace(/[^a-zA-Z0-9\-_]/g, '-');
+  const sanitizedKey = sessionId.replace(/[^a-zA-Z0-9\-_]/g, '-');
   
   return sanitizedKey;
 };
