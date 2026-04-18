@@ -20,7 +20,7 @@ export async function getSong(id: number): Promise<SongDetail> {
 
 export async function createSong(
   token: string,
-  data: { title: string; tj_number?: string; lyrics: string }
+  data: { title: string; singer?: string; tj_number?: string; lyrics: string }
 ): Promise<{ id: number }> {
   const res = await fetch(`${BASE}/songs`, {
     method: 'POST',

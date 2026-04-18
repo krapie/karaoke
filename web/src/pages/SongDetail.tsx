@@ -39,6 +39,9 @@ export default function SongDetail({ id, isAdmin, token, onBack, onDeleted }: Pr
             ← Back
           </button>
           <h1 className="text-2xl font-bold">{song.title}</h1>
+          {song.singer && (
+            <p className="text-sm text-gray-400 mt-1">{song.singer}</p>
+          )}
           {song.tj_number && (
             <span className="mt-1 inline-block text-xs bg-indigo-900/60 text-indigo-300 border border-indigo-700/50 px-2 py-0.5 rounded-full">
               TJ {song.tj_number}

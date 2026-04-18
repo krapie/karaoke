@@ -8,6 +8,7 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS songs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
+    singer TEXT,
     tj_number TEXT,
     lyrics TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP

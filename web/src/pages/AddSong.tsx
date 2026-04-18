@@ -9,6 +9,7 @@ interface Props {
 
 export default function AddSong({ token, onSaved, onCancel }: Props) {
   const [title, setTitle] = useState('');
+  const [singer, setSinger] = useState('');
   const [tjNumber, setTjNumber] = useState('');
   const [lyrics, setLyrics] = useState('');
   const [error, setError] = useState('');
@@ -22,6 +23,7 @@ export default function AddSong({ token, onSaved, onCancel }: Props) {
     try {
       const { id } = await createSong(token, {
         title: title.trim(),
+        singer: singer.trim() || undefined,
         tj_number: tjNumber.trim() || undefined,
         lyrics: lyrics.trim(),
       });
@@ -49,6 +51,13 @@ export default function AddSong({ token, onSaved, onCancel }: Props) {
             onChange={e => setTitle(e.target.value)}
             required
             className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-sm placeholder-gray-500 focus:outline-none focus:border-indigo-500"
+          />
+          <input
+            type="text"
+            placeholder="Singer (optional)"
+            value={singer}
+            onChange={e => setSinger(e.target.value)}
+            className="w-44 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-sm placeholder-gray-500 focus:outline-none focus:border-indigo-500"
           />
           <input
             type="text"

@@ -20,7 +20,7 @@ app.use(express.static(webDist));
 
 app.get('/api/songs', (req, res) => {
   const songs = db.prepare(
-    'SELECT id, title, tj_number, created_at FROM songs ORDER BY created_at DESC'
+    'SELECT id, title, singer, tj_number, created_at FROM songs ORDER BY created_at DESC'
   ).all();
   res.json(songs);
 });
@@ -34,12 +34,12 @@ app.get('/api/songs/:id', (req, res) => {
 // --- Protected routes ---
 
 app.post('/api/songs', requireAuth, (req, res) => {
-  const { title, tj_number, lyrics } = req.body;
+  const { title, singer, tj_number, lyrics } = req.body;
   if (!title || !lyrics) return res.status(400).json({ error: 'title and lyrics are required' });
 
   const result = db.prepare(
-    'INSERT INTO songs (title, tj_number, lyrics) VALUES (?, ?, ?)'
-  ).run(title, tj_number || null, lyrics);
+    'INSERT INTO songs (title, singer, tj_number, lyrics) VALUES (?, ?, ?, ?)'
+  ).run(title, singer || null, tj_number || null, lyrics);
 
   res.status(201).json({ id: result.lastInsertRowid });
 });

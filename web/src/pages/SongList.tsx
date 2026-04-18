@@ -27,6 +27,7 @@ export default function SongList({ isAdmin, token, onSelect }: Props) {
 
   const filtered = songs.filter(s =>
     s.title.toLowerCase().includes(query.toLowerCase()) ||
+    (s.singer && s.singer.toLowerCase().includes(query.toLowerCase())) ||
     (s.tj_number && s.tj_number.includes(query))
   );
 
@@ -53,7 +54,12 @@ export default function SongList({ isAdmin, token, onSelect }: Props) {
               className="flex items-center justify-between bg-gray-900 hover:bg-gray-800 border border-gray-800 rounded-lg px-4 py-3 cursor-pointer transition-colors group"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <span className="font-medium truncate">{song.title}</span>
+                <div className="min-w-0">
+                  <span className="font-medium truncate block">{song.title}</span>
+                  {song.singer && (
+                    <span className="text-xs text-gray-500 truncate block">{song.singer}</span>
+                  )}
+                </div>
                 {song.tj_number && (
                   <span className="shrink-0 text-xs bg-indigo-900/60 text-indigo-300 border border-indigo-700/50 px-2 py-0.5 rounded-full">
                     TJ {song.tj_number}
