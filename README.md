@@ -1,16 +1,14 @@
 # Karaoke
 
-JPOP 가사를 저장하고 노래방에서 쉽게 참고하는 앱.
-
----
+A personal lyrics reference app for JPOP karaoke — store songs with Japanese, phonetic, and Korean translations, and look them up instantly by title or TJ number.
 
 ## Features
 
-- **가사 저장** — 노래 제목 + TJ 번호(선택) + 가사 붙여넣기로 간단하게 추가
-- **가사 형식** — 3줄 구조: 일본어 원문 / 한국어 발음 (주요 표시) / 한국어 번역
-- **TJ 번호** — TJ 미디어 노래 번호 저장 및 뱃지 표시
-- **검색** — 제목 또는 TJ 번호로 빠른 검색
-- **어드민 모드** — 토큰 인증 후 곡 추가/삭제 (공개 접근은 읽기 전용)
+- **Save lyrics** — add a song with title, optional TJ number, and pasted lyrics
+- **3-line verse format** — Japanese original / Korean phonetic (primary display) / Korean translation
+- **TJ number** — store and display TJ Media song numbers as a badge
+- **Search** — filter songs instantly by title or TJ number
+- **Admin mode** — token-authenticated write access; public users get read-only
 
 ## Production
 
