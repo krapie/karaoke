@@ -15,4 +15,10 @@ db.exec(`
   )
 `);
 
+// Migrations for existing DBs
+const columns = db.prepare("PRAGMA table_info(songs)").all().map(c => c.name);
+if (!columns.includes('singer')) {
+  db.exec('ALTER TABLE songs ADD COLUMN singer TEXT');
+}
+
 export default db;
