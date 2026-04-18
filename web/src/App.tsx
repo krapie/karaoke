@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAdmin } from './useAdmin';
 import SongList from './pages/SongList';
 import SongDetail from './pages/SongDetail';
@@ -9,9 +9,31 @@ export type Page =
   | { name: 'detail'; id: number }
   | { name: 'add' };
 
+function pageFromHistory(): Page {
+  const state = window.history.state as Page | null;
+  return state ?? { name: 'list' };
+}
+
 export default function App() {
-  const [page, setPage] = useState<Page>({ name: 'list' });
+  const [page, setPage] = useState<Page>(pageFromHistory);
   const admin = useAdmin();
+
+  useEffect(() => {
+    function onPopState() {
+      setPage(pageFromHistory());
+    }
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  function navigate(next: Page) {
+    window.history.pushState(next, '');
+    setPage(next);
+  }
+
+  function goBack() {
+    window.history.back();
+  }
 
   function handleAdminToggle() {
     if (admin.isAdmin) {
@@ -26,7 +48,7 @@ export default function App() {
     <div className="min-h-screen bg-gray-950 text-gray-100">
       <header className="border-b border-gray-800 px-6 py-4 flex items-center justify-between max-w-3xl mx-auto">
         <button
-          onClick={() => setPage({ name: 'list' })}
+          onClick={() => navigate({ name: 'list' })}
           className="text-xl font-bold tracking-tight hover:text-white transition-colors"
         >
           🎤 karaoke
@@ -34,7 +56,7 @@ export default function App() {
         <div className="flex items-center gap-3">
           {admin.isAdmin && (
             <button
-              onClick={() => setPage({ name: 'add' })}
+              onClick={() => navigate({ name: 'add' })}
               className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-medium transition-colors"
             >
               + Add Song
@@ -54,7 +76,7 @@ export default function App() {
           <SongList
             isAdmin={admin.isAdmin}
             token={admin.token}
-            onSelect={(id) => setPage({ name: 'detail', id })}
+            onSelect={(id) => navigate({ name: 'detail', id })}
           />
         )}
         {page.name === 'detail' && (
@@ -62,15 +84,15 @@ export default function App() {
             id={page.id}
             isAdmin={admin.isAdmin}
             token={admin.token}
-            onBack={() => setPage({ name: 'list' })}
-            onDeleted={() => setPage({ name: 'list' })}
+            onBack={goBack}
+            onDeleted={() => navigate({ name: 'list' })}
           />
         )}
         {page.name === 'add' && (
           <AddSong
             token={admin.token!}
-            onSaved={(id) => setPage({ name: 'detail', id })}
-            onCancel={() => setPage({ name: 'list' })}
+            onSaved={(id) => navigate({ name: 'detail', id })}
+            onCancel={goBack}
           />
         )}
       </main>
