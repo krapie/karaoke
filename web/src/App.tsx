@@ -68,15 +68,6 @@ export default function App() {
 
   return (
     <div className="page-root">
-      <button
-        className="theme-toggle"
-        onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')}
-        aria-label="toggle theme"
-        title="toggle theme"
-      >
-        {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-      </button>
-
       <header className="kp-header">
         <button className="brand" onClick={() => navigate({ name: 'list' })} aria-label="karaoke home">
           <span className="pi-mark">π</span>
@@ -90,6 +81,14 @@ export default function App() {
           )}
           <button className="btn-secondary" onClick={handleAdminToggle}>
             {admin.isAdmin ? 'Exit Admin' : 'Admin'}
+          </button>
+          <button
+            className="theme-toggle"
+            onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')}
+            aria-label="toggle theme"
+            title="toggle theme"
+          >
+            {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
           </button>
         </div>
       </header>
