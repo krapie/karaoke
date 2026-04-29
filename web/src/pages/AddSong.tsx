@@ -37,34 +37,39 @@ export default function AddSong({ token, onSaved, onCancel }: Props) {
 
   return (
     <div>
-      <button onClick={onCancel} className="text-sm text-gray-500 hover:text-gray-300 mb-4 transition-colors">
+      <button className="kp-song-detail back-btn" style={{ display: 'block', marginBottom: '16px' }} onClick={onCancel}>
         ← Cancel
       </button>
-      <h1 className="text-2xl font-bold mb-6">Add Song</h1>
+      <h1 style={{ fontSize: 'var(--kp-text-2xl)', fontWeight: 'var(--kp-weight-semi)', letterSpacing: 'var(--kp-tracking-tight)', marginBottom: 'var(--kp-space-6)' }}>
+        Add Song
+      </h1>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex gap-3">
+      <form onSubmit={handleSubmit} className="kp-form">
+        <div className="kp-form-row">
           <input
             type="text"
             placeholder="Song title *"
             value={title}
             onChange={e => setTitle(e.target.value)}
             required
-            className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-sm placeholder-gray-500 focus:outline-none focus:border-indigo-500"
+            className="kp-input"
+            style={{ margin: 0 }}
           />
           <input
             type="text"
             placeholder="Singer (optional)"
             value={singer}
             onChange={e => setSinger(e.target.value)}
-            className="w-44 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-sm placeholder-gray-500 focus:outline-none focus:border-indigo-500"
+            className="kp-input narrow"
+            style={{ margin: 0 }}
           />
           <input
             type="text"
             placeholder="TJ number (optional)"
             value={tjNumber}
             onChange={e => setTjNumber(e.target.value)}
-            className="w-44 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-sm placeholder-gray-500 focus:outline-none focus:border-indigo-500"
+            className="kp-input narrow"
+            style={{ margin: 0 }}
           />
         </div>
 
@@ -74,25 +79,17 @@ export default function AddSong({ token, onSaved, onCancel }: Props) {
           onChange={e => setLyrics(e.target.value)}
           required
           rows={20}
-          className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:border-indigo-500 font-mono resize-y"
+          className="kp-textarea"
         />
 
-        {error && <p className="text-red-400 text-sm">{error}</p>}
+        {error && <p className="kp-error">{error}</p>}
 
-        <div className="flex gap-3 justify-end">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="px-4 py-2 border border-gray-700 hover:border-gray-500 rounded-lg text-sm transition-colors"
-          >
+        <div className="kp-form-actions">
+          <button type="button" onClick={onCancel} className="btn-secondary">
             Cancel
           </button>
-          <button
-            type="submit"
-            disabled={saving}
-            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 rounded-lg text-sm font-medium transition-colors"
-          >
-            {saving ? 'Saving...' : 'Save Song'}
+          <button type="submit" disabled={saving} className="btn-primary">
+            {saving ? 'Saving…' : 'Save Song'}
           </button>
         </div>
       </form>

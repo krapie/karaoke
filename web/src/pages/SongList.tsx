@@ -39,32 +39,23 @@ export default function SongList({ isAdmin, token, onSelect }: Props) {
     return matchesSinger && matchesQuery;
   });
 
-  if (loading) return <p className="text-gray-500 text-center py-16">Loading...</p>;
+  if (loading) return <p className="kp-empty">Loading…</p>;
 
   return (
     <div>
-      {/* Singer filter tabs */}
       {singers.length > 0 && (
-        <div className="flex gap-1 flex-wrap mb-5 border-b border-gray-800 pb-0">
+        <div className="kp-tabs">
           <button
+            className={'kp-tab' + (activeSinger === null ? ' active' : '')}
             onClick={() => setActiveSinger(null)}
-            className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
-              activeSinger === null
-                ? 'border-indigo-500 text-white'
-                : 'border-transparent text-gray-500 hover:text-gray-300'
-            }`}
           >
-            All
+            all
           </button>
           {singers.map(singer => (
             <button
               key={singer}
+              className={'kp-tab' + (activeSinger === singer ? ' active' : '')}
               onClick={() => { setActiveSinger(singer); setQuery(''); }}
-              className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
-                activeSinger === singer
-                  ? 'border-indigo-500 text-white'
-                  : 'border-transparent text-gray-500 hover:text-gray-300'
-              }`}
             >
               {singer}
             </button>
@@ -74,39 +65,38 @@ export default function SongList({ isAdmin, token, onSelect }: Props) {
 
       <input
         type="text"
-        placeholder="Search songs or TJ number..."
+        placeholder="search songs or TJ number…"
         value={query}
         onChange={e => setQuery(e.target.value)}
-        className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-sm placeholder-gray-500 focus:outline-none focus:border-indigo-500 mb-4"
+        className="kp-input"
       />
 
       {filtered.length === 0 ? (
-        <p className="text-gray-500 text-center py-16">No songs found.</p>
+        <p className="kp-empty">No songs found.</p>
       ) : (
-        <ul className="space-y-2">
+        <ul className="kp-song-list">
           {filtered.map(song => (
             <li
               key={song.id}
+              className="kp-song-item"
               onClick={() => onSelect(song.id)}
-              className="flex items-center justify-between bg-gray-900 hover:bg-gray-800 border border-gray-800 rounded-lg px-4 py-3 cursor-pointer transition-colors group"
+              role="button"
+              tabIndex={0}
+              onKeyDown={e => e.key === 'Enter' && onSelect(song.id)}
             >
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="min-w-0">
-                  <span className="font-medium truncate block">{song.title}</span>
-                  {song.singer && !activeSinger && (
-                    <span className="text-xs text-gray-500 truncate block">{song.singer}</span>
-                  )}
-                </div>
-                {song.tj_number && (
-                  <span className="shrink-0 text-xs bg-indigo-900/60 text-indigo-300 border border-indigo-700/50 px-2 py-0.5 rounded-full">
-                    TJ {song.tj_number}
-                  </span>
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <div className="kp-song-title">{song.title}</div>
+                {song.singer && !activeSinger && (
+                  <div className="kp-song-singer">{song.singer}</div>
                 )}
               </div>
+              {song.tj_number && (
+                <span className="kp-tj-badge">TJ {song.tj_number}</span>
+              )}
               {isAdmin && (
                 <button
+                  className="kp-delete-btn"
                   onClick={e => handleDelete(e, song.id)}
-                  className="opacity-0 group-hover:opacity-100 ml-3 text-red-500 hover:text-red-400 text-sm shrink-0 transition-opacity"
                 >
                   Delete
                 </button>
