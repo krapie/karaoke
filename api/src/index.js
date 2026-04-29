@@ -2,8 +2,18 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import client from 'prom-client';
 import db from './db.js';
 import { requireAuth } from './auth.js';
+
+new client.Gauge({
+  name: 'karaoke_songs_total',
+  help: 'Total number of songs stored',
+  collect() {
+    const row = db.prepare('SELECT COUNT(*) as count FROM songs').get();
+    this.set(row ? row.count : 0);
+  },
+});
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,6 +27,11 @@ const webDist = path.join(__dirname, '../../web/dist');
 app.use(express.static(webDist));
 
 // --- Public routes ---
+
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', client.register.contentType);
+  res.send(await client.register.metrics());
+});
 
 app.get('/api/songs', (req, res) => {
   const songs = db.prepare(
