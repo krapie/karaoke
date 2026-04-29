@@ -15,6 +15,20 @@ new client.Gauge({
   },
 });
 
+const sendUmamiEvent = (name) => {
+  const url = process.env.UMAMI_URL;
+  const websiteId = process.env.UMAMI_WEBSITE_ID;
+  if (!url || !websiteId) return;
+  fetch(`${url}/api/send`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      type: 'event',
+      payload: { website: websiteId, hostname: 'kevinprk.com', language: 'en', url: '/events', name },
+    }),
+  }).catch(() => {});
+};
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -56,6 +70,7 @@ app.post('/api/songs', requireAuth, (req, res) => {
     'INSERT INTO songs (title, singer, tj_number, lyrics) VALUES (?, ?, ?, ?)'
   ).run(title, singer || null, tj_number || null, lyrics);
 
+  sendUmamiEvent('song_added');
   res.status(201).json({ id: result.lastInsertRowid });
 });
 
