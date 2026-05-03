@@ -78,7 +78,27 @@
   --kp-dur-base:   180ms;
 
   --kp-content-width: 720px;
-  --kp-page-pad:      24px;
+  --kp-page-pad:      20px;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --kp-page-pad: 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --kp-content-width: 880px;
+    --kp-page-pad: 48px;
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --kp-content-width: 1000px;
+    --kp-page-pad: 64px;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -361,6 +381,28 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
   font-size: var(--kp-text-sm);
   color: var(--kp-fg-2);
   margin-top: 2px;
+}
+
+@media (min-width: 768px) {
+  .kp-verse {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows: auto auto;
+    column-gap: var(--kp-space-6);
+    align-items: start;
+  }
+  .kp-verse .line-jp { grid-column: 1; grid-row: 1; }
+  .kp-verse .line-phonetic { grid-column: 1; grid-row: 2; }
+  .kp-verse .line-translation {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    font-size: var(--kp-text-base);
+    line-height: var(--kp-leading-relaxed);
+  }
 }
 
 /* Buttons */
