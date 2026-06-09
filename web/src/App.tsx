@@ -33,7 +33,9 @@ function MoonIcon() {
 
 export default function App() {
   const [page, setPage] = useState<Page>(pageFromHistory);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>(
+    () => window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  );
   const admin = useAdmin();
 
   useEffect(() => {

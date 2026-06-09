@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getSong, deleteSong } from '../api';
 import { parseLyrics } from '../parseLyrics';
+import type { LyricBlock } from '../parseLyrics';
 import type { SongDetail as SongDetailType } from '../types';
 
 interface Props {
@@ -29,7 +30,7 @@ export default function SongDetail({ id, isAdmin, token, onBack, onDeleted }: Pr
   if (loading) return <p className="kp-empty">Loading…</p>;
   if (!song) return <p className="kp-empty">Song not found.</p>;
 
-  const verses = parseLyrics(song.lyrics);
+  const blocks = parseLyrics(song.lyrics);
 
   return (
     <div className="kp-song-detail">
@@ -51,13 +52,17 @@ export default function SongDetail({ id, isAdmin, token, onBack, onDeleted }: Pr
       </div>
 
       <div className="kp-lyrics">
-        {verses.map((verse, i) => (
-          <div key={i} className="kp-verse">
-            <p className="line-jp">{verse.japanese}</p>
-            <p className="line-phonetic">{verse.phonetic}</p>
-            <p className="line-translation">{verse.translation}</p>
-          </div>
-        ))}
+        {blocks.map((block: LyricBlock, i) =>
+          block.type === 'phrase' ? (
+            <div key={i} className="kp-phrase">{block.text}</div>
+          ) : (
+            <div key={i} className="kp-verse">
+              <p className="line-jp">{block.japanese}</p>
+              <p className="line-phonetic">{block.phonetic}</p>
+              <p className="line-translation">{block.translation}</p>
+            </div>
+          )
+        )}
       </div>
     </div>
   );
