@@ -381,13 +381,12 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
 }
 
 .kp-phrase {
-  font-size: var(--kp-text-xs);
-  font-family: var(--kp-font-mono);
-  letter-spacing: var(--kp-tracking-mono);
-  color: var(--kp-fg-4);
-  text-align: center;
-  text-transform: uppercase;
-  padding: var(--kp-space-1) 0;
+  border-left: 2px solid var(--kp-border);
+  padding-left: var(--kp-space-4);
+  font-size: var(--kp-text-lg);
+  font-weight: var(--kp-weight-medium);
+  color: var(--kp-fg);
+  line-height: var(--kp-leading-snug);
 }
 
 @media (min-width: 768px) {
