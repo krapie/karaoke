@@ -30,7 +30,7 @@ export default function SongDetail({ id, isAdmin, token, onBack, onDeleted }: Pr
   if (loading) return <p className="kp-empty">Loading…</p>;
   if (!song) return <p className="kp-empty">Song not found.</p>;
 
-  const blocks = parseLyrics(song.lyrics);
+  const blocks = parseLyrics(song.lyrics, song.language);
 
   return (
     <div className="kp-song-detail">

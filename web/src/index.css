@@ -476,6 +476,27 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
 .kp-form-row .kp-input { width: auto; flex: 1; margin-bottom: 0; }
 .kp-form-row .kp-input.narrow { flex: 0 0 168px; }
 
+/* Language selector */
+.kp-lang-selector {
+  display: flex;
+  gap: var(--kp-space-2);
+}
+.kp-lang-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--kp-border);
+  border-radius: var(--kp-radius-sm);
+  font-size: var(--kp-text-sm);
+  color: var(--kp-fg-3);
+  cursor: pointer;
+  transition: border-color var(--kp-dur-fast) var(--kp-ease), color var(--kp-dur-fast) var(--kp-ease), background var(--kp-dur-fast) var(--kp-ease);
+}
+.kp-lang-option input[type="radio"] { display: none; }
+.kp-lang-option:hover { border-color: var(--kp-border-strong); color: var(--kp-fg); }
+.kp-lang-option.active { border-color: var(--kp-fg); color: var(--kp-fg); background: var(--kp-hover-bg); }
+
 .kp-textarea {
   width: 100%;
   font: var(--kp-weight-regular) var(--kp-text-sm) var(--kp-font-mono);

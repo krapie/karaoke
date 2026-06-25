@@ -20,5 +20,8 @@ const columns = db.prepare("PRAGMA table_info(songs)").all().map(c => c.name);
 if (!columns.includes('singer')) {
   db.exec('ALTER TABLE songs ADD COLUMN singer TEXT');
 }
+if (!columns.includes('language')) {
+  db.exec("ALTER TABLE songs ADD COLUMN language TEXT NOT NULL DEFAULT 'japanese'");
+}
 
 export default db;
