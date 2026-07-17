@@ -1,16 +1,6 @@
 # Karaoke
 
-JPOP lyrics reference — store songs with Japanese, phonetic, and Korean translations and look them up instantly. **Live:** [karaoke.kevinprk.com](https://karaoke.kevinprk.com)
-
-## Features
-
-| Feature | Description |
-|---------|-------------|
-| **Song library** | Save songs with title, optional TJ number, and pasted lyrics |
-| **3-line verse format** | Japanese original / Korean phonetic / Korean translation, side by side |
-| **TJ number** | Store and display TJ Media song numbers as a badge |
-| **Search** | Filter songs instantly by title or TJ number |
-| **Admin mode** | Token-authenticated write access; public users get read-only |
+JPOP lyrics reference app — save songs with their Japanese lyrics, Korean phonetic reading, and Korean translation, then look them up instantly by title or TJ number. Built for karaoke sessions where you need a quick lyric refresh between songs. **Live:** [karaoke.kevinprk.com](https://karaoke.kevinprk.com)
 
 ## Getting Started
 
@@ -23,4 +13,12 @@ ADMIN_TOKEN=yourtoken DB_PATH=./karaoke.db npm run dev
 cd web && npm install && npm run dev   # http://localhost:5173
 ```
 
-Lyrics are pasted as 3-line verses separated by blank lines — Japanese / phonetic / translation.
+Lyrics are pasted as 3-line verse blocks separated by blank lines: Japanese / phonetic / Korean translation.
+
+## Features
+
+- **Song library** — save songs with title, optional TJ number, and pasted lyrics; stored in SQLite via the API
+- **3-line verse format** — each verse shows Japanese original / Korean phonetic / Korean translation side by side for at-a-glance reading during a session
+- **TJ number badge** — attach and display TJ Media song numbers so you can find the song on a karaoke machine without searching
+- **Instant search** — filter the library by title or TJ number as you type; no submit required
+- **Admin mode** — token-authenticated write access for adding and editing songs; public visitors get read-only access
