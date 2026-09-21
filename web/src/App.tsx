@@ -5,13 +5,13 @@ import SongDetail from './pages/SongDetail';
 import AddSong from './pages/AddSong';
 
 export type Page =
-  | { name: 'list' }
+  | { name: 'list'; activeSinger: string | null }
   | { name: 'detail'; id: number }
   | { name: 'add' };
 
 function pageFromHistory(): Page {
   const state = window.history.state as Page | null;
-  return state ?? { name: 'list' };
+  return state ?? { name: 'list', activeSinger: null };
 }
 
 function SunIcon() {
@@ -59,6 +59,12 @@ export default function App() {
     window.history.back();
   }
 
+  function setActiveSinger(activeSinger: string | null) {
+    const next: Page = { name: 'list', activeSinger };
+    window.history.replaceState(next, '');
+    setPage(next);
+  }
+
   function handleAdminToggle() {
     if (admin.isAdmin) {
       admin.logout();
@@ -71,7 +77,7 @@ export default function App() {
   return (
     <div className="page-root">
       <header className="kp-header">
-        <button className="brand" onClick={() => navigate({ name: 'list' })} aria-label="karaoke home">
+        <button className="brand" onClick={() => navigate({ name: 'list', activeSinger: null })} aria-label="karaoke home">
           <span className="pi-mark">π</span>
           <span>Karaoke</span>
         </button>
@@ -100,6 +106,8 @@ export default function App() {
           <SongList
             isAdmin={admin.isAdmin}
             token={admin.token}
+            activeSinger={page.activeSinger}
+            onActiveSingerChange={setActiveSinger}
             onSelect={(id) => navigate({ name: 'detail', id })}
           />
         )}
@@ -109,7 +117,7 @@ export default function App() {
             isAdmin={admin.isAdmin}
             token={admin.token}
             onBack={goBack}
-            onDeleted={() => navigate({ name: 'list' })}
+            onDeleted={() => navigate({ name: 'list', activeSinger: null })}
           />
         )}
         {page.name === 'add' && (

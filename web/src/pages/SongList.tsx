@@ -5,14 +5,15 @@ import type { Song } from '../types';
 interface Props {
   isAdmin: boolean;
   token: string | null;
+  activeSinger: string | null;
+  onActiveSingerChange: (singer: string | null) => void;
   onSelect: (id: number) => void;
 }
 
-export default function SongList({ isAdmin, token, onSelect }: Props) {
+export default function SongList({ isAdmin, token, activeSinger, onActiveSingerChange, onSelect }: Props) {
   const [songs, setSongs] = useState<Song[]>([]);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
-  const [activeSinger, setActiveSinger] = useState<string | null>(null);
 
   useEffect(() => {
     getSongs().then(setSongs).finally(() => setLoading(false));
@@ -47,7 +48,7 @@ export default function SongList({ isAdmin, token, onSelect }: Props) {
         <div className="kp-tabs">
           <button
             className={'kp-tab' + (activeSinger === null ? ' active' : '')}
-            onClick={() => setActiveSinger(null)}
+            onClick={() => onActiveSingerChange(null)}
           >
             all
           </button>
@@ -55,7 +56,7 @@ export default function SongList({ isAdmin, token, onSelect }: Props) {
             <button
               key={singer}
               className={'kp-tab' + (activeSinger === singer ? ' active' : '')}
-              onClick={() => { setActiveSinger(singer); setQuery(''); }}
+              onClick={() => { onActiveSingerChange(singer); setQuery(''); }}
             >
               {singer}
             </button>
