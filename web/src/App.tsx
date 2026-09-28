@@ -69,8 +69,7 @@ export default function App() {
     if (admin.isAdmin) {
       admin.logout();
     } else {
-      const token = prompt('Enter admin token:');
-      if (token) admin.login(token);
+      admin.login();
     }
   }
 
