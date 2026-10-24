@@ -1,5 +1,5 @@
 # Stage 1: build web
-FROM node:22-alpine AS web-builder
+FROM node:25-alpine AS web-builder
 WORKDIR /app/web
 COPY web/package*.json ./
 RUN npm ci
@@ -7,13 +7,13 @@ COPY web/ ./
 RUN npm run build
 
 # Stage 2: build api deps
-FROM node:22-alpine AS api-builder
+FROM node:25-alpine AS api-builder
 WORKDIR /app/api
 COPY api/package*.json ./
 RUN npm ci --omit=dev
 
 # Stage 3: runtime
-FROM node:22-alpine AS runner
+FROM node:25-alpine AS runner
 RUN apk --no-cache add python3 make g++
 WORKDIR /app
 
